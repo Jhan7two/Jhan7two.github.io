@@ -387,16 +387,103 @@ html {
         width: 85%;
     }
 }
-/* *********************/
-/* seccion P O R T F O L I O */
-/* *********************/
 
-#portfolio {
-    max-width: 1100px;
-    padding: 100px 0;
-    margin: auto;
+
+.bento-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
+.proyecto {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    aspect-ratio: 1 / 1;
+}
+
+.proyecto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.proyecto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.proyecto:hover .overlay {
+    opacity: 1;
+}
+
+.info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.proyecto:hover .info {
+    transform: translateY(0);
+}
+
+.info h3 {
+    margin: 0 0 10px;
+    font-size: 1.2em;
+}
+
+.info p {
+    margin: 0;
+    font-size: 0.9em;
+}
+
+@media (max-width: 1024px) {
+    .bento-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .bento-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .info h3 {
+        font-size: 1em;
+    }
+
+    .info p {
+        font-size: 0.8em;
+    }
+}
 #portfolio .titulo-seccion {
     text-align: center;
     font-size: 22px;
@@ -405,138 +492,8 @@ html {
     text-decoration: underline;
     text-decoration-color: #d3d3d3;
     text-decoration-thickness: 5px;
-}
-
-#portfolio .fila {
-    display: flex;
-    justify-content: space-between;
-    margin: 30px 0;
-}
-
-#portfolio .fila .proyecto {
-    max-width: 450px;
-    border: 1px solid #000;
-    margin: 0 10px;
-    position: relative;
-    overflow: hidden;
-}
-
-#portfolio .fila .proyecto img {
-    width: 100%;
-    height: 100%;
-    ;
-    filter: grayscale(1);
-    object-fit: cover;
-    transition: .5s;
-}
-
-#portfolio .fila .proyecto:hover img {
-    filter: grayscale(0);
-}
-
-#portfolio .fila .proyecto .info {
-    position: absolute;
-    left: 0px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #ff5080;
-    width: 100%;
-    padding: 10px;
-    opacity: 0;
-    bottom: -40px;
-    transition: .5s;
-}
-
-#portfolio .fila .proyecto:hover .info {
-    opacity: 1;
-    bottom: 0;
-}
-/* *********************/
-/* seccion C O N T A C T O */
-/* *********************/
-
-#contacto {
-    padding: 100px 15px;
-    background-color: #f3f3f3;
-}
-
-#contacto .titulo-seccion {
-    margin-bottom: 20px;
-}
-
-#contacto .contenedor-form {
-    max-width: 1100px;
-    margin: auto;
-}
-
-#contacto .contenedor-form .fila {
     margin-bottom: 15px;
 }
-
-#contacto .contenedor-form .mitad {
-    display: flex;
-    justify-content: space-between;
-}
-
-#contacto .contenedor-form input,
-#contacto .contenedor-form textarea {
-    padding: 20px;
-    border-radius: 20px;
-    border: none;
-    border: 1px solid #919191;
-}
-
-#contacto .contenedor-form .mitad input {
-    width: 48%;
-}
-
-#contacto .contenedor-form .input-full {
-    width: 100%;
-}
-
-#contacto .titulo-seccion {
-    text-align: center;
-    font-size: 22px;
-    text-transform: uppercase;
-    color: #111135;
-    text-decoration: underline;
-    text-decoration-color: #d3d3d3;
-    text-decoration-thickness: 5px;
-}
-
-#contacto .btn-enviar {
-    display: block;
-    margin: auto;
-    cursor: pointer;
-    transition: .5s;
-    padding: 10px 15px !important;
-}
-
-#contacto .btn-enviar:hover {
-    background-color: #ff5080;
-    color: #fff;
-}
-/* *********************/
-/* seccion F O O T E R */
-/* *********************/
-
-footer {
-    background-color: #000;
-    color: #fff;
-    text-align: center;
-    padding: 30px 0;
-}
-
-footer a {
-    text-decoration: none;
-    color: #fff;
-    display: inline-block;
-    margin: 5px;
-    font-size: 26px;
-}
-/* *********************/
-/* seccion R E S P O N S I V E */
-/* *********************/
-
 @media screen and (max-width: 800px) {
     .redes {
         display: none;
@@ -599,26 +556,5 @@ footer a {
     .contenedor-skills {
         padding: 50px 20px;
     }
-    /* seccion PORTFOLIO */
-    #portfolio {
-        padding: 50px 0;
-    }
-    #portfolio .fila {
-        display: block;
-    }
-    #portfolio .fila .proyecto {
-        margin: 10px auto;
-    }
-    /* seccion CONTACTO */
-    #contacto {
-        padding: 50px 15px;
-    }
-    #contacto .contenedor-form .mitad {
-        margin-bottom: 15px;
-        display: block;
-    }
-    #contacto .contenedor-form .mitad input {
-        width: 100%;
-        margin-bottom: 15px;
-    }
+    
 }
