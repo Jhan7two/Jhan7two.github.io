@@ -1,83 +1,115 @@
-let loadMoreBtn = document.querySelector('#load-more');
-let currentItem = 4; // Cambiado currenitem a currentItem
+const colors = {
+  issue8: '#f6e0a4',
+  issue7: '#ff608c',
+  issue6: '#ffffff',
+  issue5: '#00c1b5',
+  issue4: '#ff6519',
+  issue3: '#ffbe00',
+  issue2: '#1d3fbb',
+  issue1: '#E30512'
+};
 
-loadMoreBtn.onclick = () => { // Cambiado , por . en loadMoreBtn.onclick
-    let boxes = [...document.querySelectorAll('.box-container .box')];
-    for (let i = currentItem; i < currentItem + 4; i++) { // Corregido el bucle for
-        if (boxes[i]) {
-            boxes[i].style.display = 'inline-block';
+// --- Sincronización de scroll entre .side-nav y .content ---
+const content = document.querySelector('.content');
+const sideNav = document.querySelector('.side-nav');
+let isSyncingContent = false;
+let isSyncingSideNav = false;
+
+if (content && sideNav) {
+  content.addEventListener('scroll', () => {
+    if (!isSyncingContent) {
+      isSyncingSideNav = true;
+      sideNav.scrollTop = content.scrollTop;
+      isSyncingSideNav = false;
+    }
+  });
+  sideNav.addEventListener('scroll', () => {
+    if (!isSyncingSideNav) {
+      isSyncingContent = true;
+      content.scrollTop = sideNav.scrollTop;
+      isSyncingContent = false;
+    }
+  });
+}
+
+// --- Intersection Observer para cambiar colores de fondo ---
+const observerOptions = {
+  threshold: 0.5
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      if (colors[id]) {
+        document.body.style.backgroundColor = colors[id];
+      }
+    }
+  });
+}, observerOptions);
+
+// Observar todos los elementos con IDs que coincidan con los colores
+Object.keys(colors).forEach(id => {
+  const el = document.getElementById(id);
+  if (el) observer.observe(el);
+});
+
+// --- Funcionalidad de navegación ---
+const main = document.querySelector('.main');
+const navLinks = document.querySelectorAll('.nav-link');
+const covers = document.querySelectorAll('.cover');
+
+// Manejar clics en navegación
+navLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const issueNumber = parseInt(link.dataset.issue);
+    
+    // Calcular la posición de scroll
+    let targetIndex;
+    if (issueNumber === 8) {
+      targetIndex = 0;
+    } else {
+      targetIndex = issueNumber;
+    }
+    
+    const targetCover = covers[targetIndex];
+    if (targetCover) {
+      targetCover.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Actualizar navegación activa
+    navLinks.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+// --- Detectar scroll para actualizar navegación activa ---
+let isScrolling = false;
+
+main.addEventListener('scroll', () => {
+  if (!isScrolling) {
+    isScrolling = true;
+    requestAnimationFrame(() => {
+      const scrollTop = main.scrollTop;
+      const windowHeight = window.innerHeight;
+      const currentSection = Math.round(scrollTop / windowHeight);
+      
+      // Actualizar navegación activa basada en la sección actual
+      const issueNumbers = [8, 1, 2, 3, 4, 5, 6, 7];
+      const activeIssue = issueNumbers[currentSection];
+      
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (parseInt(link.dataset.issue) === activeIssue) {
+          link.classList.add('active');
         }
-    }
-    currentItem += 4;
-    if (currentItem >= boxes.length) {
-        loadMoreBtn.style.display = 'none';
-    }
-}
+      });
+      
+      isScrolling = false;
+    });
+  }
+});
 
-const carrito = document.getElementById('carrito');
-const elementos1 = document.getElementById('lista-1');
-const lista = document.querySelector('#lista-carrito tbody'); // Cambiado #lista-carrito a #lista-carrito tbody
-const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
-
-cargarEventListeners();
-function cargarEventListeners(){
-    elementos1.addEventListener('click', comprarElemento);
-    carrito.addEventListener('click', eliminarElemento); // Cambiado , por .
-    vaciarCarritoBtn.addEventListener('click', vaciarCarrito); // Cambiado , por .
-}
-
-function comprarElemento(e) {
-    e.preventDefault();
-
-    if (e.target.classList.contains('agregar-carrito')) {
-        const elemento = e.target.parentElement.parentElement;
-
-        leerDatosElemento(elemento);
-    }
-}
-
-function leerDatosElemento(elemento) {
-    const infoElemento = {
-        imagen: elemento.querySelector('img').src,
-        titulo: elemento.querySelector('h3').textContent,
-        precio: elemento.querySelector('.precio').textContent,
-        id: elemento.querySelector('a').getAttribute('data-id')
-    };
-
-    insertarCarrito(infoElemento);
-}
-
-function insertarCarrito(elemento) {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>
-            <img src="${elemento.imagen}" width=100 />
-        </td>
-        <td>
-            ${elemento.titulo}
-        </td>
-        <td>
-            ${elemento.precio}
-        </td>
-        <td>
-            <a href="#" class="borrar" data-id="${elemento.id}">X</a> <!-- Cambiado ide a id -->
-        </td>
-    `;
-
-    lista.appendChild(row);
-}
-
-function eliminarElemento(e) {
-    e.preventDefault();
-
-    if (e.target.classList.contains('borrar')) {
-        e.target.parentElement.parentElement.remove();
-    }
-}
-
-function vaciarCarrito() {
-    while (lista.firstChild) {
-        lista.removeChild(lista.firstChild);
-    }
-    return false;
-}
+// Establecer color inicial
+document.body.style.backgroundColor = '#ffffff';
